@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.luisFernando.restapi.exception.UserNotFoundException;
 import br.com.luisFernando.restapi.model.User;
 import br.com.luisFernando.restapi.repository.UserRepository;
-import exception.UserNotFoundException;
 
 @RestController
 public class UserController {
@@ -39,10 +39,10 @@ public class UserController {
 	}
 
 	@GetMapping("/users/{id}")
-	public User show(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
+	public User show(@PathVariable("id") Long id, HttpServletResponse response) throws IOException, UserNotFoundException {
 		try {
 			return userRepository.getUser(id);
-		} catch (UserPrincipalNotFoundException e) {
+		} catch (UserNotFoundException e) {
 			response.sendError(404, e.getMessage());
 			return null;
 		}		
@@ -62,7 +62,7 @@ public class UserController {
 	}
 
 	@DeleteMapping("/users/{id}")
-	public User delete(@PathVariable("id") Long id) throws UserPrincipalNotFoundException {
+	public User delete(@PathVariable("id") Long id) throws UserNotFoundException, UserPrincipalNotFoundException {
 		User user = userRepository.getUser(id);
 		userRepository.removeUser(user);
 		return user;

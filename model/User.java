@@ -1,10 +1,14 @@
 package br.com.luisFernando.restapi.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
 	
 	private long id;
 	private String nome;
 	private Integer age;
+	private List<CreditCard> creditCards;
 	
 	public User() {
 		
@@ -13,7 +17,8 @@ public class User {
 	public User (Long id, String nome, Integer age) { 
 		this.id = id;
 		this.nome = nome;
-		this.age = age;		
+		this.age = age;	
+		this.creditCards = new ArrayList<>();
 	}
 	
 
@@ -39,6 +44,14 @@ public class User {
 
 	public void setAge(Integer age) {
 		this.age = age;
+	}
+	
+	public void addCreditCard (CreditCard creditCard) {
+		this.creditCards.add(creditCard);
+	}
+
+	public List<CreditCard> getCreditCards() {		
+		return this.creditCards;
 	}
 
 }
