@@ -1,6 +1,7 @@
 package br.com.luisFernando.restapi.repository;
 
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,16 +26,16 @@ public class UserRepository {
 		users.add(user);
 	}
 	
-	public User getUser(Long userId) throws Exception {
+	public User getUser(Long userId) throws UserPrincipalNotFoundException {
 		for (User user : users) {
 			if (user.getId() == userId) {
 				return user;
 			}
 		}
-		throw new Exception("User not found");		
+		throw new UserPrincipalNotFoundException("User not found");		
 	}
 	
-	public void removeUser(User user) throws Exception {		
+	public void removeUser(User user) throws UserPrincipalNotFoundException {		
 		users.remove(user);
 	}
 	

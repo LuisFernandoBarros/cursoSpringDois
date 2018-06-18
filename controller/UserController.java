@@ -1,10 +1,13 @@
 package br.com.luisFernando.restapi.controller;
 
+import java.io.IOException;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.util.buf.UEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.luisFernando.restapi.model.User;
 import br.com.luisFernando.restapi.repository.UserRepository;
+import exception.UserNotFoundException;
 
 @RestController
 public class UserController {
@@ -35,11 +39,11 @@ public class UserController {
 	}
 
 	@GetMapping("/users/{id}")
-	public User show(@PathVariable("id") Long id, HttpServletResponse response) throws Exception {
+	public User show(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
 		try {
 			return userRepository.getUser(id);
-		} catch (Exception e) {
-			response.sendError(404, "User not found.");
+		} catch (UserPrincipalNotFoundException e) {
+			response.sendError(404, e.getMessage());
 			return null;
 		}		
 	}
@@ -53,14 +57,12 @@ public class UserController {
 		if(changes.containsKey("age")) {
 			Integer age = Integer.parseInt(changes.get("age"));
 			currentUser.setAge(age);	
-		}
-
-		
+		}		
 		return currentUser;
 	}
 
 	@DeleteMapping("/users/{id}")
-	public User delete(@PathVariable("id") Long id) throws Exception {
+	public User delete(@PathVariable("id") Long id) throws UserPrincipalNotFoundException {
 		User user = userRepository.getUser(id);
 		userRepository.removeUser(user);
 		return user;
