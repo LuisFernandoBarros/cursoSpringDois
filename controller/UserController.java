@@ -3,6 +3,8 @@ package br.com.luisFernando.restapi.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,13 +35,13 @@ public class UserController {
 	}
 
 	@GetMapping("/users/{id}")
-	public User show(@PathVariable("id") Long id) throws Exception {
-		for (User user : userRepository.getUsers()) {
-			if (user.getId() == id) {
-				return user;
-			}
-		}
-		throw new Exception("User not found");
+	public User show(@PathVariable("id") Long id, HttpServletResponse response) throws Exception {
+		try {
+			return userRepository.getUser(id);
+		} catch (Exception e) {
+			response.sendError(404, "User not found.");
+			return null;
+		}		
 	}
 
 	@PatchMapping("/users/{id}")
